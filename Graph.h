@@ -31,12 +31,12 @@ class Graph {
         // --------
 
         typedef int vertex_descriptor;          // fix!
-        typedef int edge_descriptor;            // fix!
+        typedef std::pair<vertex_descriptor, vertex_descriptor> edge_descriptor;
 		
 
-        typedef int* vertex_iterator;           // fix!
-        typedef int* edge_iterator;             // fix!
-        typedef int* adjacency_iterator;        // fix!
+        typedef std::vector<vertex_descriptor>::iterator vertex_iterator;
+        typedef std::vector<edge_descriptor>::iterator edge_iterator;
+        typedef std::list<vertex_descriptor>::iterator adjacency_iterator;
 
         typedef std::size_t vertices_size_type;
         typedef std::size_t edges_size_type;
@@ -47,10 +47,11 @@ class Graph {
         // --------
 
         /**
-         * @param Vertex_descriptors are the node pair to be an on the graph
-         * @param Graph is the graph we are working with using a list.
-		 * @return pair of the edge descriptor or the direction of the new pair
-		 * and to make sure that it is not a duplicate
+         * @param Two vertices to be made into an edge and added to the graph
+         * @param a graph containing vertices and edges
+		 * @return pair of the edge descriptor and a boolean
+		 * boolean is true if the edge was successfully added,
+		 * false otherwise (the edge already existed)
 		 */
         friend std::pair<edge_descriptor, bool> add_edge (vertex_descriptor, vertex_descriptor, Graph&) {
             // <your code>
@@ -63,12 +64,13 @@ class Graph {
         // ----------
 
         /**
-         * @param Add a node to our Graph
-		 * @return a new vertex descriptor or a node.
+         * @param the Graph being operated upon
+		 * @return a copy of the new vertex.
          */
-        friend vertex_descriptor add_vertex (Graph&) {
-           
-            vertex_descriptor v;
+        friend vertex_descriptor add_vertex (Graph& g) {
+        	g.vertices.push_back(vertex_descriptor());
+        	g.adjacency_list.push_back(std::list<vertex_descriptor()>);
+            vertex_descriptor v = g.vertices.back();
             return v;}
 
         // -----------------
@@ -76,14 +78,10 @@ class Graph {
         // -----------------
 
         /**
-         * @param take in a node and our current graph
-		 * @return a pair that was just mapped.
-		 * Note: the Adjacency iterator is what is horizontally iterating our list
-		 * Also note that vertically iterating our list means to change the root node. 
-		 * Our list is working like a vector in that each row is an adjacency list with the root node being the current row element
-		 * The adjacency list is the nodes being directed at.
+         * @param take in a node and the current graph
+		 * @return a pair of iterators pointing to all nodes that the provided vertex points to.
          */
-        friend std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices (vertex_descriptor, const Graph&) {
+        friend std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices (vertex_descriptor source, const Graph& g) {
             // <your code>
             adjacency_iterator b = adjacency_iterator();
             adjacency_iterator e = adjacency_iterator();
@@ -94,13 +92,23 @@ class Graph {
         // ----
 
         /**
-         * @param take two nodes that will be mapped on our graph 
-		 * @return a pair denoting the mapping and a boolean to make sure it doesn't already exist.
+         * @param take two vertices that may be on the graph that is provided
+		 * @return a pair containing the edge between the two vertices and a boolean which is
+		 * true if the edge already exists in the graph and false otherwise.
          */
-        friend std::pair<edge_descriptor, bool> edge (vertex_descriptor, vertex_descriptor, const Graph&) {
+        friend std::pair<edge_descriptor, bool> edge (vertex_descriptor source, vertex_descriptor target, const Graph& g) {
             // <your code>
-            edge_descriptor ed;
-            bool            b;
+            edge_descriptor ed = std::make_pair(source, target);
+            bool            b = false;
+            edge_iterator beg = g.edges.begin();
+            edge_iterator end = g.edges.end();
+            while(beg != end && !b)
+            {
+            	std::pair<vertex_descriptor, vertex_descriptor> temp = *beg;
+            	if(temp == ed)
+            		b = true;
+            	++beg;
+            }
             return std::make_pair(ed, b);}
 
         // -----
@@ -108,15 +116,12 @@ class Graph {
         // -----
 
         /**
-         * O(1) in space
-         * O(1) in time
-         * @param Take in our graph being worked on
-		 * @return a pair with the root node and the directed node and call that path the edge
+         * @param Takes in a Graph
+		 * @return all edges in the graph
          */
-        friend std::pair<edge_iterator, edge_iterator> edges (const Graph&) {
-            // <your code>
-            edge_iterator b;
-            edge_iterator e;
+        friend std::pair<edge_iterator, edge_iterator> edges (const Graph& g) {
+            edge_iterator b = g.edges.begin();
+            edge_iterator e = g.edges.end();
             return std::make_pair(b, e);}
 
         // ---------
@@ -124,19 +129,18 @@ class Graph {
         // ---------
 
         /**
-         * @param Takes in our current graph
-		 * @returns the number of edges in our graph
+         * @param Takes in a Graph
+		 * @returns the number of edges in the graph
          */
-        friend edges_size_type num_edges (const Graph&) {
+        friend edges_size_type num_edges (const Graph& g) {
             
             edges_size_type s = 0;
-            std::vector< std::vector <edge_descriptor> >::iterator beg = g.begin();
-            std::vector< std::vector <edge_descriptor> >::iterator end = g.end();
+            std::vector< std::list<vertex_iterator> >::iterator beg = g.edges.begin();
+            std::vector< std::list<vertex_iterator> >::iterator end = g.edges.end();
             while(beg != end)
             {
             	s += (*beg).size();
             	++beg;
-
             }
             return s;}
 
@@ -145,12 +149,12 @@ class Graph {
         // ------------
 
         /**
-         * @param Takes in our Graph
-		 * @return Returns the number of vertices in the graph
+         * @param Takes in a Graph
+		 * @return the number of vertices in the graph
          */
-        friend vertices_size_type num_vertices (const Graph&) {
+        friend vertices_size_type num_vertices (const Graph& g) {
             // <your code>
-            vertices_size_type s = g.size();
+            vertices_size_type s = g.vertices.size();
             return s;}
 
         // ------
@@ -159,12 +163,13 @@ class Graph {
 
         /**
          * @param Takes in our Graph
+         * @param edge_descriptor pointing to the edge whose source is to be identified
 		 * @return The root node of the edge
          */
-        friend vertex_descriptor source (edge_descriptor, const Graph&) {
-            // <your code>
-            vertex_descriptor v;
-            return v;}
+        friend vertex_descriptor source (edge_descriptor ed , const Graph& g) {
+            vertex_descriptor v = ed.first;
+            return v;
+        }
 
         // ------
         // target
@@ -172,26 +177,26 @@ class Graph {
 
         /**
          * @param Takes in our Graph
-		 * @return the targe vertex
-		 * This method takes in an edge descriptor and creates a vertex descriptor so that we can make an edge later.
-		 * Essentially it adds a new node to the graph.
+         * @param edge_descriptor pointing to the edge whose target is to be identified
+		 * @return the target vertex
          */
-        friend vertex_descriptor target (edge_descriptor, const Graph&) {
+        friend vertex_descriptor target (edge_descriptor ed, const Graph& g) {
             // <your code>
-            vertex_descriptor v;
-            return v;}
+            vertex_descriptor v = ed.second;
+            return v;
+        }
 
         // ------
         // vertex
         // ------
 
         /**
-         * @param Takes in our graph and a size of how big our elements are that will be mapped
-		 * @return a new vertex descriptor
+         * @param Takes in our graph and the index of the vertex to be returned
+		 * @return the vertex at the index provided
          */
-        friend vertex_descriptor vertex (vertices_size_type, const Graph&) {
+        friend vertex_descriptor vertex (vertices_size_type n, const Graph& g) {
             // <your code>
-            vertex_descriptor vd;
+            vertex_descriptor vd = g.vertices.at(n);
             return vd;}
 
         // --------
@@ -200,12 +205,12 @@ class Graph {
 
         /**
          * @param Takes in our Graph
-		 * @return a pair of mapped elements
+		 * @return all vertices in the graph
          */
-        friend std::pair<vertex_iterator, vertex_iterator> vertices (const Graph&) {
+        friend std::pair<vertex_iterator, vertex_iterator> vertices (const Graph& g) {
             // <your code>
-            vertex_iterator b = vertex_iterator();
-            vertex_iterator e = vertex_iterator();
+            vertex_iterator b = g.vertices.begin();
+            vertex_iterator e = g.vertices.end();
             return std::make_pair(b, e);}
 
     private:
@@ -213,8 +218,9 @@ class Graph {
         // data
         // ----
 
-        std::vector< std::vector<vertex_descriptor> > g; // To make an adjacency Matrix
-		std::list<std::list<vertex_descriptor>> gl //for when we want to make an Adjacency List
+		std::vector< std::list<vertex_descriptor> > adjacency_list;
+		std::vector<vertex_descriptor> vertices;
+		std::vector<edge_descriptor> edges;
 
         // -----
         // valid
@@ -222,7 +228,8 @@ class Graph {
 
         /**
          * @return true if the graph is a valid graph
-		 * Validity denotes that it does not have duplicate nodes or edges and at least 1 node in the Graph
+		 * Validity denotes that it does not have duplicate nodes or edges
+		 * and at least 1 node in the Graph
          */
         bool valid () const {
             // where we want to make sure we don't have duplicates and at least one node
@@ -231,14 +238,17 @@ class Graph {
 			else if( gl.size() > 1){
 				iterator b = gl.begin();
 				iterator e = gl.end();
-				while(b < e){
-					if(b ==e-1){
+				while(b != e){
+					if(b == e-1){
 						//If the b's node equals e's node, then it is a duplicate node
 						return false;}
 					++b;
-					--e;}}
+					--e;
+				}
+			}
 			else{ //No null first node and no duplicates
-				return true;}}
+				return true;}
+        }
 
     public:
         // ------------
@@ -260,7 +270,8 @@ class Graph {
 			
 			
             
-            assert(valid());}
+            assert(valid());
+        }
 
         // Default copy, destructor, and copy assignment
         // Graph  (const Graph<T>&);
