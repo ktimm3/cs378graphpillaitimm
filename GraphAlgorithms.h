@@ -2,6 +2,8 @@
 // projects/c++/graph/GraphAlgorithms.h
 // Copyright (C) 2010
 // Glenn P. Downing
+// Edited by: Ajay Pillai
+//       and: Kimberly Timm Bassett
 // ------------------------------------
 
 #ifndef GraphAlgorithms_h
@@ -20,7 +22,8 @@
 /**
  * depth-first traversal
  * three colors
- * <your documentation>
+ * @param Takes in a Graph by reference
+ * @return True to make sure it has one cycle
  */
 template <typename G>
 bool has_cycle (const G& g) {
@@ -33,9 +36,10 @@ bool has_cycle (const G& g) {
 /**
  * depth-first traversal
  * two colors
- * <your documentation>
+ * @param Takes in a graph by reference and an Output Iterator
  * Precondition: !has_cycle(g)
  */
+
 template <typename G, typename OI>
 void topological_sort (const G& g, OI x) {
     *x = 2;
