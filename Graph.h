@@ -55,20 +55,20 @@ class Graph {
 		 */
         friend std::pair<edge_descriptor, bool> add_edge (vertex_descriptor source, vertex_descriptor target, Graph& g) {
             // <your code>
-            edge_descriptor ed (source, target));
+            edge_descriptor ed (source, target);
             bool b = true;
             int num = 0;
             vertex_iterator t = g.vertices.begin();
             while(t != g.vertices.end())
             {
-            	if(*temp == source)//
+            	if(*t == source)//
             		break;
             	++t;
             	++num;
             }
-            std::list<vertex_descriptor> current = g.adjacency_list.at(num);
-            std::list<vertex_descriptor> beg = current.begin();
-            std::list<vertex_descriptor> end = current.end();
+            std::list<vertex_descriptor> current = g.adjacency_list[num];
+            std::list<vertex_descriptor>::iterator beg = current.begin();
+            std::list<vertex_descriptor>::iterator end = current.end();
             while(beg != end && b)
             {
             	vertex_descriptor temp = *beg;
@@ -78,10 +78,10 @@ class Graph {
             }
             if(b)//if the edge does not already exist
             {
-            	current.push_back(target);
-            	current.sort();
-            	vector<edge_descriptor>::iterator edgebeg = g.edges.begin();
-            	vector<edge_descriptor>::iterator edgeend = g.edges.end();
+            	beg = current.begin();
+            	g.adjacency_list[num].push_back(target);
+            	std::vector<edge_descriptor>::iterator edgebeg = g.edges.begin();
+            	std::vector<edge_descriptor>::iterator edgeend = g.edges.end();
             	while(edgebeg != edgeend)
             	{
             		if(ed > *edgebeg)
@@ -103,7 +103,7 @@ class Graph {
         friend vertex_descriptor add_vertex (Graph& g) {
         	g.vertices.push_back(vertex_descriptor(g.count));
         	++g.count;
-        	g.adjacency_list.push_back(std::list<vertex_descriptor>);
+        	g.adjacency_list.push_back(std::list<vertex_descriptor>());
             vertex_descriptor v = g.vertices.back();
             return v;}
 
@@ -117,7 +117,7 @@ class Graph {
          */
         friend std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices (vertex_descriptor source, const Graph& g) {
             // <your code>
-        	vertex_iterator temp = g.vertices.begin();
+        	std::vector<vertex_descriptor>::const_iterator temp = g.vertices.begin();
         	int num = 0;
         	//while loop finds the specific vertex, which can be used with the adjacency_list
         	//to find all adjacent nodes
@@ -146,8 +146,8 @@ class Graph {
             // <your code>
             edge_descriptor ed = std::make_pair(source, target);
             bool            b = false;
-            edge_iterator beg = g.edges.begin();
-            edge_iterator end = g.edges.end();
+            std::vector<edge_descriptor>::const_iterator beg = g.edges.begin();
+            std::vector<edge_descriptor>::const_iterator end = g.edges.end();
             while(beg != end && !b)
             {
             	std::pair<vertex_descriptor, vertex_descriptor> temp = *beg;
@@ -166,9 +166,16 @@ class Graph {
 		 * @return all edges in the graph
          */
         friend std::pair<edge_iterator, edge_iterator> edges (const Graph& g) {
-            edge_iterator b = g.edges.begin();
-            edge_iterator e = g.edges.end();
-            return std::make_pair(b, e);}
+        	std::vector<edge_descriptor>::const_reverse_iterator b = g.edges.rbegin();
+        	std::vector<edge_descriptor>::const_reverse_iterator e = g.edges.rend();
+        	std::vector<edge_descriptor> result;
+        	while(b != e)
+        	{
+        		result.push_back(*b);
+        		++b;
+        	}
+            return std::make_pair(result.begin(), result.end());
+        }
 
         // ---------
         // num_edges
@@ -180,15 +187,8 @@ class Graph {
          */
         friend edges_size_type num_edges (const Graph& g) {
             
-            edges_size_type s = 0;
-            std::vector< std::list<vertex_iterator> >::iterator beg = g.edges.begin();
-            std::vector< std::list<vertex_iterator> >::iterator end = g.edges.end();
-            while(beg != end)
-            {
-            	s += (*beg).size();
-            	++beg;
-            }
-            return s;}
+            return g.edges.size();
+        }
 
         // ------------
         // num_vertices
@@ -255,9 +255,15 @@ class Graph {
          */
         friend std::pair<vertex_iterator, vertex_iterator> vertices (const Graph& g) {
             // <your code>
-            vertex_iterator b = g.vertices.begin();
-            vertex_iterator e = g.vertices.end();
-            return std::make_pair(b, e);}
+        	std::vector<vertex_descriptor>::const_iterator b = g.vertices.begin();
+        	std::vector<vertex_descriptor>::const_iterator e = g.vertices.end();
+        	std::vector<vertex_descriptor> result;
+        	while(b != e)
+        	{
+        		result.push_back(*b);
+        		++b;
+        	}
+            return std::make_pair(result.begin(), result.end());}
 
     private:
         // ----
@@ -283,7 +289,7 @@ class Graph {
         	   return true;
            else
            {
-        	   vector<vertex_descriptor>::iterator bv = vertices.begin();
+        	   vector<vertex_descriptor>::const_iterator bv = vertices.begin();
         	   vertex_descriptor current = *bv;
         	   ++bv;
         	   //checks for duplicate vertices
@@ -294,7 +300,7 @@ class Graph {
         		   current = *bv;
         		   ++bv;
         	   }
-        	   vector<edge_descriptor>::iterator ev = edges.begin();
+        	   vector<edge_descriptor>::const_iterator ev = edges.begin();
         	   edge_descriptor cur = *ev;
         	   ++ev;
         	   //check for duplicate edges
@@ -302,7 +308,7 @@ class Graph {
         	   {
         		   if(*ev == cur)
         			   return false;
-        		   current = *ev;
+        		   cur = *ev;
         		   ++ev;
         	   }
         	   return true;
