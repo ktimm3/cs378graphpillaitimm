@@ -2,6 +2,8 @@
 // projects/graph/Graph.h
 // Copyright (C) 2010
 // Glenn P. Downing
+// Edited By: Ajay Pillai
+//		 and: Kimberly Timm Bassett
 // ----------------------
 
 #ifndef Graph_h
@@ -15,6 +17,8 @@
 #include <cstddef> // size_t
 #include <utility> // make_pair, pair
 #include <vector>  // vector
+#include <list> //List
+
 
 // -----
 // Graph
@@ -28,6 +32,7 @@ class Graph {
 
         typedef int vertex_descriptor;          // fix!
         typedef int edge_descriptor;            // fix!
+		
 
         typedef int* vertex_iterator;           // fix!
         typedef int* edge_iterator;             // fix!
@@ -58,7 +63,7 @@ class Graph {
          * <your documentation>
          */
         friend vertex_descriptor add_vertex (Graph&) {
-            // <your code>
+           
             vertex_descriptor v;
             return v;}
 
@@ -189,7 +194,8 @@ class Graph {
         // data
         // ----
 
-        std::vector< std::vector<vertex_descriptor> > g; // something like this
+        std::vector< std::vector<vertex_descriptor> > g; // To make an adjacency Matrix
+		std::list<std::list<vertex_descriptor>> gl //for when we want to make an Adjacency List
 
         // -----
         // valid
@@ -199,8 +205,20 @@ class Graph {
          * <your documentation>
          */
         bool valid () const {
-            // <your code>
-            return true;}
+            // where we want to make sure we don't have duplicates and at least one node
+			if(gl.size() == 0)
+				return false;
+			else if( gl.size() > 1){
+				iterator b = gl.begin();
+				iterator e = gl.end();
+				while(b < e){
+					if(b ==e-1){
+						//If the b's node equals e's node, then it is a duplicate node
+						return false;}
+					++b;
+					--e;}}
+			else{ //No null first node and no duplicates
+				return true;}}
 
     public:
         // ------------
@@ -208,10 +226,13 @@ class Graph {
         // ------------
 
         /**
-         * <your documentation>
+         * Creates a Graph which will be mapped using a list
+		 * Starts by making an empty list
          */
         Graph () {
-            // <your code>
+			list<T> gl; //Creates an empty list
+			
+            
             assert(valid());}
 
         // Default copy, destructor, and copy assignment
