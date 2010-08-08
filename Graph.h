@@ -112,7 +112,15 @@ class Graph {
          */
         friend edges_size_type num_edges (const Graph&) {
             // <your code>
-            edges_size_type s;
+            edges_size_type s = 0;
+            std::vector< std::vector <edge_descriptor> >::iterator beg = g.begin();
+            std::vector< std::vector <edge_descriptor> >::iterator end = g.end();
+            while(beg != end)
+            {
+            	s += (*beg).size();
+            	++beg;
+
+            }
             return s;}
 
         // ------------
@@ -124,7 +132,7 @@ class Graph {
          */
         friend vertices_size_type num_vertices (const Graph&) {
             // <your code>
-            vertices_size_type s;
+            vertices_size_type s = g.size();
             return s;}
 
         // ------
