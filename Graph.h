@@ -47,8 +47,11 @@ class Graph {
         // --------
 
         /**
-         * <your documentation>
-         */
+         * @param Vertex_descriptors are the node pair to be an on the graph
+         * @param Graph is the graph we are working with using a list.
+		 * @return pair of the edge descriptor or the direction of the new pair
+		 * and to make sure that it is not a duplicate
+		 */
         friend std::pair<edge_descriptor, bool> add_edge (vertex_descriptor, vertex_descriptor, Graph&) {
             // <your code>
             edge_descriptor ed;
@@ -60,7 +63,8 @@ class Graph {
         // ----------
 
         /**
-         * <your documentation>
+         * @param Add a node to our Graph
+		 * @return a new vertex descriptor or a node.
          */
         friend vertex_descriptor add_vertex (Graph&) {
            
@@ -72,7 +76,7 @@ class Graph {
         // -----------------
 
         /**
-         * <your documentation>
+         * @param take in a node and 
          */
         friend std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices (vertex_descriptor, const Graph&) {
             // <your code>
@@ -234,6 +238,7 @@ class Graph {
 			
 			//Create Vertex Iterators to point at the first node 
 			//ie the root of the list. Should be pointing at the same place
+			// Note the returning iterators are Bidirectional by the List stl
 			vertex_iterator b = gl.begin();
 			vertex_iterator e = gl.end();
 			
