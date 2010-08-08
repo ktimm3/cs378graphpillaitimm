@@ -1,60 +1,8 @@
 TestGraph.c++
-...........F.F.F.F.F.F.F.F.F.F
+..............................................
 
 
-!!!FAILURES!!!
-Test Results:
-Run:  20   Failures: 10   Errors: 0
-
-
-1) test: TestGraph<Graph>::test_add_edge (F) line: 116 TestGraph.c++
-assertion failed
-- Expression: p.first == edAB
-
-
-2) test: TestGraph<Graph>::test_adjacent_vertices (F) line: 127 TestGraph.c++
-assertion failed
-- Expression: b != e
-
-
-3) test: TestGraph<Graph>::test_edge (F) line: 142 TestGraph.c++
-assertion failed
-- Expression: p.first == edAB
-
-
-4) test: TestGraph<Graph>::test_edges (F) line: 156 TestGraph.c++
-assertion failed
-- Expression: ed == edAB
-
-
-5) test: TestGraph<Graph>::test_num_edges (F) line: 168 TestGraph.c++
-assertion failed
-- Expression: es == 11
-
-
-6) test: TestGraph<Graph>::test_num_vertices (F) line: 176 TestGraph.c++
-assertion failed
-- Expression: vs == 8
-
-
-7) test: TestGraph<Graph>::test_source (F) line: 184 TestGraph.c++
-assertion failed
-- Expression: vd == vdA
-
-
-8) test: TestGraph<Graph>::test_target (F) line: 192 TestGraph.c++
-assertion failed
-- Expression: vd == vdB
-
-
-9) test: TestGraph<Graph>::test_vertex (F) line: 200 TestGraph.c++
-assertion failed
-- Expression: vd == vdA
-
-
-10) test: TestGraph<Graph>::test_vertices (F) line: 210 TestGraph.c++
-assertion failed
-- Expression: b != e
+OK (46 tests)
 
 
 Done.
