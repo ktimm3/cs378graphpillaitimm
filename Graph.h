@@ -47,8 +47,9 @@ class Graph {
         // --------
 
         /**
-         * @param Two vertices to be made into an edge and added to the graph
-         * @param a graph containing vertices and edges
+         * @param source vertex of the edge
+         * @param target vertex of the edge
+         * @param g a graph containing vertices and edges
 		 * @return pair of the edge descriptor and a boolean
 		 * boolean is true if the edge was successfully added,
 		 * false otherwise (the edge already existed)
@@ -99,7 +100,7 @@ class Graph {
         // ----------
 
         /**
-         * @param the Graph being operated upon
+         * @param g		the Graph being operated upon
 		 * @return a copy of the new vertex.
          */
         friend vertex_descriptor add_vertex (Graph& g) {
@@ -114,7 +115,8 @@ class Graph {
         // -----------------
 
         /**
-         * @param take in a node and the current graph
+         * @param source 	an individual vertex
+         * @param g			a graph
 		 * @return a pair of iterators pointing to all nodes that the provided vertex points to.
          */
         friend std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices (vertex_descriptor source, const Graph& g) {
@@ -140,7 +142,9 @@ class Graph {
         // ----
 
         /**
-         * @param take two vertices that may be on the graph that is provided
+         * @param source
+         * @param target		source and target of the edge which may or may not exist
+         * @param g				graph that might have the edge
 		 * @return a pair containing the edge between the two vertices and a boolean which is
 		 * true if the edge already exists in the graph and false otherwise.
          */
@@ -164,7 +168,7 @@ class Graph {
         // -----
 
         /**
-         * @param Takes in a Graph
+         * @param g		 a Graph
 		 * @return all edges in the graph
          */
         friend std::pair<edge_iterator, edge_iterator> edges (const Graph& g) {
@@ -184,7 +188,7 @@ class Graph {
         // ---------
 
         /**
-         * @param Takes in a Graph
+         * @param g		 a Graph
 		 * @returns the number of edges in the graph
          */
         friend edges_size_type num_edges (const Graph& g) {
@@ -197,7 +201,7 @@ class Graph {
         // ------------
 
         /**
-         * @param Takes in a Graph
+         * @param g		 a Graph
 		 * @return the number of vertices in the graph
          */
         friend vertices_size_type num_vertices (const Graph& g) {
@@ -210,8 +214,8 @@ class Graph {
         // ------
 
         /**
-         * @param Takes in our Graph
-         * @param edge_descriptor pointing to the edge whose source is to be identified
+         * @param ed		edge_descriptor pointing to the edge whose source is to be identified
+         * @param g			a Graph
 		 * @return The root node of the edge
          */
         friend vertex_descriptor source (edge_descriptor ed , const Graph& g) {
@@ -224,8 +228,8 @@ class Graph {
         // ------
 
         /**
-         * @param Takes in our Graph
-         * @param edge_descriptor pointing to the edge whose target is to be identified
+         * @param ed		edge_descriptor pointing to the edge whose target is to be identified
+         * @param g			a Graph
 		 * @return the target vertex
          */
         friend vertex_descriptor target (edge_descriptor ed, const Graph& g) {
@@ -239,7 +243,8 @@ class Graph {
         // ------
 
         /**
-         * @param Takes in our graph and the index of the vertex to be returned
+         * @param n		index of a vertex
+         * @param g		a graph
 		 * @return the vertex at the index provided
          */
         friend vertex_descriptor vertex (vertices_size_type n, const Graph& g) {
@@ -252,7 +257,7 @@ class Graph {
         // --------
 
         /**
-         * @param Takes in our Graph
+         * @param g		a graph
 		 * @return all vertices in the graph
          */
         friend std::pair<vertex_iterator, vertex_iterator> vertices (const Graph& g) {

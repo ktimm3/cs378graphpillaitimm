@@ -27,13 +27,10 @@
 /**
  * depth-first traversal
  * three colors
- * @param Takes in a Graph by reference
- * @return True to make sure it has one cycle
+ * @param g 	Graph by reference
+ * @return true if there is a cycle, false otherwise
  */
 
-//typedef std::vector<vertex_descriptor>::iterator vertex_iterator;
-//typedef std::vector<edge_descriptor>::iterator edge_iterator;
-//typedef std::list<vertex_descriptor>::iterator adjacency_iterator;
 
 template <typename G>
 bool has_cycle (const G& g) {
@@ -96,7 +93,8 @@ bool helper(const G& g, std::list<int>::iterator b, std::list<int>::iterator e, 
 /**
  * depth-first traversal
  * two colors
- * @param Takes in a graph by reference and an Output Iterator
+ * @param g 	a graph by reference
+ * @param x		output_iterator
  * Precondition: !has_cycle(g)
  */
 
