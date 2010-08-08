@@ -76,7 +76,12 @@ class Graph {
         // -----------------
 
         /**
-         * @param take in a node and 
+         * @param take in a node and our current graph
+		 * @return a pair that was just mapped.
+		 * Note: the Adjacency iterator is what is horizontally iterating our list
+		 * Also note that vertically iterating our list means to change the root node. 
+		 * Our list is working like a vector in that each row is an adjacency list with the root node being the current row element
+		 * The adjacency list is the nodes being directed at.
          */
         friend std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices (vertex_descriptor, const Graph&) {
             // <your code>
@@ -89,7 +94,8 @@ class Graph {
         // ----
 
         /**
-         * <your documentation>
+         * @param take two nodes that will be mapped on our graph 
+		 * @return a pair denoting the mapping and a boolean to make sure it doesn't already exist.
          */
         friend std::pair<edge_descriptor, bool> edge (vertex_descriptor, vertex_descriptor, const Graph&) {
             // <your code>
@@ -104,7 +110,8 @@ class Graph {
         /**
          * O(1) in space
          * O(1) in time
-         * <your documentation>
+         * @param Take in our graph being worked on
+		 * @return a pair with the root node and the directed node and call that path the edge
          */
         friend std::pair<edge_iterator, edge_iterator> edges (const Graph&) {
             // <your code>
@@ -117,10 +124,11 @@ class Graph {
         // ---------
 
         /**
-         * <your documentation>
+         * @param Takes in our current graph
+		 * @returns the number of edges in our graph
          */
         friend edges_size_type num_edges (const Graph&) {
-            // <your code>
+            
             edges_size_type s = 0;
             std::vector< std::vector <edge_descriptor> >::iterator beg = g.begin();
             std::vector< std::vector <edge_descriptor> >::iterator end = g.end();
@@ -137,7 +145,8 @@ class Graph {
         // ------------
 
         /**
-         * <your documentation>
+         * @param Takes in our Graph
+		 * @return Returns the number of vertices in the graph
          */
         friend vertices_size_type num_vertices (const Graph&) {
             // <your code>
@@ -149,7 +158,8 @@ class Graph {
         // ------
 
         /**
-         * <your documentation>
+         * @param Takes in our Graph
+		 * @return The root node of the edge
          */
         friend vertex_descriptor source (edge_descriptor, const Graph&) {
             // <your code>
@@ -161,7 +171,10 @@ class Graph {
         // ------
 
         /**
-         * <your documentation>
+         * @param Takes in our Graph
+		 * @return the targe vertex
+		 * This method takes in an edge descriptor and creates a vertex descriptor so that we can make an edge later.
+		 * Essentially it adds a new node to the graph.
          */
         friend vertex_descriptor target (edge_descriptor, const Graph&) {
             // <your code>
@@ -173,7 +186,8 @@ class Graph {
         // ------
 
         /**
-         * <your documentation>
+         * @param Takes in our graph and a size of how big our elements are that will be mapped
+		 * @return a new vertex descriptor
          */
         friend vertex_descriptor vertex (vertices_size_type, const Graph&) {
             // <your code>
@@ -185,7 +199,8 @@ class Graph {
         // --------
 
         /**
-         * <your documentation>
+         * @param Takes in our Graph
+		 * @return a pair of mapped elements
          */
         friend std::pair<vertex_iterator, vertex_iterator> vertices (const Graph&) {
             // <your code>
@@ -206,7 +221,8 @@ class Graph {
         // -----
 
         /**
-         * <your documentation>
+         * @return true if the graph is a valid graph
+		 * Validity denotes that it does not have duplicate nodes or edges and at least 1 node in the Graph
          */
         bool valid () const {
             // where we want to make sure we don't have duplicates and at least one node
