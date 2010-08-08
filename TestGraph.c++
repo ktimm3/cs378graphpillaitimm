@@ -2,6 +2,8 @@
 // projects/graph/TestGraph.c++
 // Copyright (C) 2010
 // Glenn P. Downing
+// Edited by: Ajay Pillai
+//		 and: Kimberly Timm Bassett
 // ----------------------------
 
 /*
