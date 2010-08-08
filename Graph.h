@@ -57,6 +57,8 @@ class Graph {
             // <your code>
             edge_descriptor ed (source, target);
             bool b = true;
+            if(source == target)
+            	return make_pair(ed, false);
             int num = 0;
             vertex_iterator t = g.vertices.begin();
             while(t != g.vertices.end())
