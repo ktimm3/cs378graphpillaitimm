@@ -232,6 +232,12 @@ class Graph {
         Graph () {
 			list<T> gl; //Creates an empty list
 			
+			//Create Vertex Iterators to point at the first node 
+			//ie the root of the list. Should be pointing at the same place
+			vertex_iterator b = gl.begin();
+			vertex_iterator e = gl.end();
+			
+			
             
             assert(valid());}
 
