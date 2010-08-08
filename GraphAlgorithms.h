@@ -35,9 +35,9 @@
 template <typename G>
 bool has_cycle (const G& g) {
 	using namespace std;
-	if(num_vertices < 2)
+	if(num_vertices(g) < 2)
 		return false;
-	if(num_edges < 2)
+	if(num_edges(g) < 2)
 		return false;
 	pair< vector<int>::iterator, vector<int>::iterator > vert = vertices(g);
 	vector<int>::iterator b = vert.first;
@@ -60,6 +60,7 @@ bool has_cycle (const G& g) {
 template <typename G>
 bool helper(const G& g, std::list<int>::iterator b, std::list<int>::iterator e, int original)
 {
+	using namespace std;
 	if(b == e)
 		return false;
 	else
