@@ -30,7 +30,7 @@ class Graph {
         // typedefs
         // --------
 
-        typedef int vertex_descriptor;          // fix!
+        typedef int vertex_descriptor;
         typedef std::pair<vertex_descriptor, vertex_descriptor> edge_descriptor;
 		
 
@@ -53,10 +53,43 @@ class Graph {
 		 * boolean is true if the edge was successfully added,
 		 * false otherwise (the edge already existed)
 		 */
-        friend std::pair<edge_descriptor, bool> add_edge (vertex_descriptor, vertex_descriptor, Graph&) {
+        friend std::pair<edge_descriptor, bool> add_edge (vertex_descriptor source, vertex_descriptor target, Graph& g) {
             // <your code>
-            edge_descriptor ed;
-            bool            b;
+            edge_descriptor ed (source, target));
+            bool b = true;
+            int num = 0;
+            vertex_iterator t = g.vertices.begin();
+            while(t != g.vertices.end())
+            {
+            	if(*temp == source)//
+            		break;
+            	++t;
+            	++num;
+            }
+            std::list<vertex_descriptor> current = g.adjacency_list.at(num);
+            std::list<vertex_descriptor> beg = current.begin();
+            std::list<vertex_descriptor> end = current.end();
+            while(beg != end && b)
+            {
+            	vertex_descriptor temp = *beg;
+            	if(temp == target)
+            		b = false;
+            	++beg;
+            }
+            if(b)//if the edge does not already exist
+            {
+            	current.push_back(target);
+            	current.sort();
+            	vector<edge_descriptor>::iterator edgebeg = g.edges.begin();
+            	vector<edge_descriptor>::iterator edgeend = g.edges.end();
+            	while(edgebeg != edgeend)
+            	{
+            		if(ed > *edgebeg)
+            			break;
+            		++edgebeg;
+            	}
+            	g.edges.insert(edgebeg, ed);
+            }
             return std::make_pair(ed, b);}
 
         // ----------
@@ -68,8 +101,9 @@ class Graph {
 		 * @return a copy of the new vertex.
          */
         friend vertex_descriptor add_vertex (Graph& g) {
-        	g.vertices.push_back(vertex_descriptor());
-        	g.adjacency_list.push_back(std::list<vertex_descriptor()>);
+        	g.vertices.push_back(vertex_descriptor(g.count));
+        	++g.count;
+        	g.adjacency_list.push_back(std::list<vertex_descriptor>);
             vertex_descriptor v = g.vertices.back();
             return v;}
 
@@ -83,8 +117,20 @@ class Graph {
          */
         friend std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices (vertex_descriptor source, const Graph& g) {
             // <your code>
-            adjacency_iterator b = adjacency_iterator();
-            adjacency_iterator e = adjacency_iterator();
+        	vertex_iterator temp = g.vertices.begin();
+        	int num = 0;
+        	//while loop finds the specific vertex, which can be used with the adjacency_list
+        	//to find all adjacent nodes
+        	while(temp != g.vertices.end())
+        	{
+        		if(*temp == source)//
+        			break;
+        		++temp;
+        		++num;
+        	}
+        	std::list<vertex_descriptor> current = g.adjacency_list.at(num);
+            adjacency_iterator b = current.begin();
+            adjacency_iterator e = current.end();
             return std::make_pair(b, e);}
 
         // ----
@@ -221,6 +267,7 @@ class Graph {
 		std::vector< std::list<vertex_descriptor> > adjacency_list;
 		std::vector<vertex_descriptor> vertices;
 		std::vector<edge_descriptor> edges;
+		int count;
 
         // -----
         // valid
@@ -229,25 +276,37 @@ class Graph {
         /**
          * @return true if the graph is a valid graph
 		 * Validity denotes that it does not have duplicate nodes or edges
-		 * and at least 1 node in the Graph
          */
         bool valid () const {
-            // where we want to make sure we don't have duplicates and at least one node
-			if(gl.size() == 0)
-				return false;
-			else if( gl.size() > 1){
-				iterator b = gl.begin();
-				iterator e = gl.end();
-				while(b != e){
-					if(b == e-1){
-						//If the b's node equals e's node, then it is a duplicate node
-						return false;}
-					++b;
-					--e;
-				}
-			}
-			else{ //No null first node and no duplicates
-				return true;}
+        	using namespace std;
+           if(count == 0)
+        	   return true;
+           else
+           {
+        	   vector<vertex_descriptor>::iterator bv = vertices.begin();
+        	   vertex_descriptor current = *bv;
+        	   ++bv;
+        	   //checks for duplicate vertices
+        	   while(bv != vertices.end())
+        	   {
+        		   if(*bv == current)
+        			   return false;
+        		   current = *bv;
+        		   ++bv;
+        	   }
+        	   vector<edge_descriptor>::iterator ev = edges.begin();
+        	   edge_descriptor cur = *ev;
+        	   ++ev;
+        	   //check for duplicate edges
+        	   while(ev != edges.end())
+        	   {
+        		   if(*ev == cur)
+        			   return false;
+        		   current = *ev;
+        		   ++ev;
+        	   }
+        	   return true;
+           }
         }
 
     public:
@@ -260,13 +319,10 @@ class Graph {
 		 * Starts by making an empty list
          */
         Graph () {
-			list<T> gl; //Creates an empty list
-			
-			//Create Vertex Iterators to point at the first node 
-			//ie the root of the list. Should be pointing at the same place
-			// Note the returning iterators are Bidirectional by the List stl
-			vertex_iterator b = gl.begin();
-			vertex_iterator e = gl.end();
+			adjacency_list = std::vector< std::list<vertex_descriptor> >();
+			vertices = std::vector<vertex_descriptor>();
+			edges = std::vector<edge_descriptor>();
+			count = 0;
 			
 			
             
