@@ -101,11 +101,87 @@ bool helper(const G& g, std::list<int>::iterator b, std::list<int>::iterator e, 
 
 template <typename G, typename OI>
 void topological_sort (const G& g, OI x) {
-    *x = 2;
-    ++x;
-    *x = 0;
-    ++x;
-    *x = 1;
-    }
+	assert (! has_cycle(g));
+	using namespace std;
+	pair<vector<int>::iterator, vector<int>::iterator> vertices = vertices(g);
+	vector<int>::iterator begin = vertices.first;
+	vector<int>::iterator end = vertices.second;
+	vector<int> no_incoming;
+	vector<int> result;
+	while(begin != end)
+	{
+		int vertex = *begin;
+		vector<int>::iterator temp = vertices.first;
+		bool b = true;
+		while(temp != end && b)
+		{
+			if(temp == begin)
+			{
+				++temp;
+				continue;
+			}
+			else
+			{
+				int tempvertex = *temp;
+				pair< list<int>::iterator, list<int>::iterator > adjacent = adjacent_vertices(tempvertex, g);
+				list<int>::iterator lb = adjacent.first;
+				list<int>::iterator le = adjacent.second;
+				while(lb != le)
+				{
+					if(*lb == vertex)
+						b = false;
+					++lb;
+				}
+				++temp;
+			}
+		}
+		if(b)
+		{
+			no_incoming.push_back(vertex);
+		}
+		++begin;
+	}
+	begin = no_incoming.begin();
+	end = no_incoming.end();
+	while(begin != end)
+	{
+		result.push_back(*begin);
+		++begin;
+	}
+	begin = vertices.first;
+	end = vertices.second;
+	while(begin != end)
+	{
+		int current = *begin;
+		vector<int>::iterator temp = result.begin();
+		bool b = true;
+		while(temp != result.end())
+		{
+			if(current == *temp)
+			{
+				b = false;
+				break;
+			}
+			else
+			{
+				++temp;
+			}
+		}
+		if(b)
+			result.push_back(current);
+		++begin;
+	}
+
+	begin = result.begin();
+	end = result.end();
+	while(begin != end)
+	{
+		*x = *begin;
+		++x;
+		++begin;
+	}
+
+
+}
 
 #endif // GraphAlgorithms_h
